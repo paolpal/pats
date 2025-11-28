@@ -85,7 +85,7 @@ DataLoader Examples: [Ipython Notebook](dataloader_tutorial.ipynb)
 ```sh
 mkdir ../pycasper
 git clone https://github.com/chahuja/pycasper ../pycasper
-ln -s ../pycasper/pycasper .
+ln -s ../pycasper/pycasper src/
 ```
 
 * Create an [anaconda](https://www.anaconda.com/) or a virtual enviroment and activate it
