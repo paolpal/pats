@@ -15,6 +15,11 @@ src/pats/data/common.py
 src/pats/data/dataUtils.py
 src/pats/data/skeleton.py
 src/pats/data/text.py
+src/pats/utils/__init__.py
+src/pats/utils/__main__.py
+src/pats/utils/config.py
+src/pats/utils/data_builder.py
+src/pats/utils/loaders.py
 src/pycasper/BookKeeper.py
 src/pycasper/BookKeeperMini.py
 src/pycasper/__init__.py
