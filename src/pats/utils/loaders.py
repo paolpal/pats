@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from typing import Dict, Optional
 
-from .config import INTERVALS_CSV
+from .config import get_config
 
 
 # ============================================================================
@@ -58,7 +58,7 @@ def load_text_data(h5_file: Path) -> Optional[pd.DataFrame]:
     return None
 
 
-def get_interval_metadata(speaker: str, interval_id: str) -> Dict:
+def get_interval_metadata(speaker: str, interval_id: str, data_root: Optional[Path] = None) -> Dict:
     """
     Recupera i metadati di un intervallo dal CSV.
     
@@ -69,6 +69,8 @@ def get_interval_metadata(speaker: str, interval_id: str) -> Dict:
     Returns:
         Dizionario con metadati dell'intervallo
     """
+    config = get_config(data_root)
+    INTERVALS_CSV = config['INTERVALS_CSV']
     df = pd.read_csv(INTERVALS_CSV)
     df = df[df['speaker'] == speaker]
     row = df[df['interval_id'] == interval_id].iloc[0]
@@ -78,3 +80,20 @@ def get_interval_metadata(speaker: str, interval_id: str) -> Dict:
         'duration': float(row['delta_time']),
         'speaker': speaker
     }
+
+def get_missing_intervals(data_root: Optional[Path] = None) :
+    """
+    Carica gli intervalli mancanti dal file HDF5.
+    
+    Returns:
+        DataFrame con gli intervalli mancanti
+    """
+    
+    config = get_config(data_root)
+    MISSING_INTERVALS_H5 = config['MISSING_INTERVALS_H5']
+    missing, h5 = HDF5.load(str(MISSING_INTERVALS_H5), key='intervals')
+    missing = missing[()].astype('U')
+    h5.close()
+    return set(missing)
+
+

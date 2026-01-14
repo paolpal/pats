@@ -20,14 +20,3 @@ src/pats/utils/__main__.py
 src/pats/utils/config.py
 src/pats/utils/data_builder.py
 src/pats/utils/loaders.py
-src/pycasper/BookKeeper.py
-src/pycasper/BookKeeperMini.py
-src/pycasper/__init__.py
-src/pycasper/argsUtils.py
-src/pycasper/decorators.py
-src/pycasper/name.py
-src/pycasper/pathUtils.py
-src/pycasper/results.py
-src/pycasper/torchUtils.py
-src/pycasper/unittest_Bookkeeper.py
-src/pycasper/contrib/unzipTCDTIMIT.py

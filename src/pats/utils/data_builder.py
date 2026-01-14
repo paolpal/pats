@@ -19,15 +19,15 @@ from pathlib import Path
 import pandas as pd
 from typing import Dict, List, Optional
 
-from .config import PROCESSED_DIR, INTERVALS_CSV
-from .loaders import load_pose_data, load_text_data, get_interval_metadata
+from .config import get_config
+from .loaders import load_pose_data, load_text_data, get_interval_metadata, get_missing_intervals
 
 
 # ============================================================================
 # FUNZIONE PRINCIPALE DI COSTRUZIONE DATI
 # ============================================================================
 
-def build_sample_data(speaker: str, interval_id: str, verbose: bool = True) -> Dict:
+def build_sample_data(speaker: str, interval_id: str, data_root: Optional[Path] = None, verbose: bool = True) -> Dict:
     """
     Costruisce una struttura dati completa per un sample.
     
@@ -47,6 +47,8 @@ def build_sample_data(speaker: str, interval_id: str, verbose: bool = True) -> D
         }
     """
     # Path al file HDF5
+    config = get_config(data_root)
+    PROCESSED_DIR = config['PROCESSED_DIR']
     h5_file = PROCESSED_DIR / speaker / f'{interval_id}.h5'
     
     if not h5_file.exists():
@@ -60,7 +62,7 @@ def build_sample_data(speaker: str, interval_id: str, verbose: bool = True) -> D
     text_meta = load_text_data(h5_file)
     
     # Recupera metadati intervallo
-    interval_meta = get_interval_metadata(speaker, interval_id)
+    interval_meta = get_interval_metadata(speaker, interval_id, data_root=data_root)
     duration = interval_meta['duration']
     
     # Costruisce la struttura dati
@@ -104,7 +106,7 @@ def build_sample_data(speaker: str, interval_id: str, verbose: bool = True) -> D
 # FUNZIONI UTILITY
 # ============================================================================
 
-def get_speaker_intervals(speaker: str, split: Optional[str] = None) -> List[str]:
+def get_speaker_intervals(speaker: str, split: Optional[str] = None, data_root: Optional[Path] = None) -> List[str]:
     """
     Recupera tutti gli interval_id per uno speaker.
     
@@ -115,6 +117,8 @@ def get_speaker_intervals(speaker: str, split: Optional[str] = None) -> List[str
     Returns:
         Lista di interval_id
     """
+    config = get_config(data_root)
+    INTERVALS_CSV = config['INTERVALS_CSV']
     df = pd.read_csv(INTERVALS_CSV)
     if split is not None:
         df = df[df['dataset'] == split]
@@ -122,7 +126,7 @@ def get_speaker_intervals(speaker: str, split: Optional[str] = None) -> List[str
     return df['interval_id'].tolist()
 
 
-def load_multiple_samples(speaker: str, interval_ids: List[str], 
+def load_multiple_samples(speaker: str, interval_ids: List[str], data_root: Optional[Path] = None,
                          verbose: bool = False) -> List[Dict]:
     """
     Carica multipli sample in batch.
@@ -135,12 +139,26 @@ def load_multiple_samples(speaker: str, interval_ids: List[str],
     Returns:
         Lista di dizionari con struttura sample
     """
+    missing_intervals = get_missing_intervals(data_root)
     samples = []
     for interval_id in interval_ids:
+        if interval_id in missing_intervals:
+            if verbose:
+                print(f"✗ Intervallo mancante: {interval_id}")
+            continue
         try:
-            sample = build_sample_data(speaker, interval_id, verbose=verbose)
+            sample = build_sample_data(speaker, interval_id, data_root=data_root, verbose=verbose)
             samples.append(sample)
         except Exception as e:
             print(f"✗ Errore caricamento {interval_id}: {e}")
     
     return samples
+
+def get_all_missing_intervals(data_root: Optional[Path] = None):
+    """
+    Carica gli intervalli mancanti dal file HDF5.
+    
+    Returns:
+        DataFrame con gli intervalli mancanti
+    """
+    return get_missing_intervals(data_root)

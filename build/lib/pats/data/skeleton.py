@@ -16,7 +16,7 @@ from tqdm import tqdm
 import yaml
 import warnings
 
-from pycasper.pathUtils import replace_Nth_parent
+#from pycasper.pathUtils import replace_Nth_parent
 
 class Skeleton2D(Modality):
   def __init__(self, path2data='../dataset/groot/data/speech2gesture_data',

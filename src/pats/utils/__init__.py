@@ -16,19 +16,19 @@ Struttura dati di output:
 """
 
 # Export delle funzioni principali
-from .config import DATA_ROOT, PROCESSED_DIR, INTERVALS_CSV
+from .config import get_config
 from .loaders import load_pose_data, load_text_data, get_interval_metadata
 from .data_builder import (
     build_sample_data,
     get_speaker_intervals,
-    load_multiple_samples
+    load_multiple_samples,
+    get_all_missing_intervals
 )
+
 
 __all__ = [
     # Configurazione
-    'DATA_ROOT',
-    'PROCESSED_DIR',
-    'INTERVALS_CSV',
+    'get_config',
     # Loaders
     'load_pose_data',
     'load_text_data',
@@ -37,4 +37,5 @@ __all__ = [
     'build_sample_data',
     'get_speaker_intervals',
     'load_multiple_samples',
+    'get_all_missing_intervals'
 ]
