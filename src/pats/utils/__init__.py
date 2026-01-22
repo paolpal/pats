@@ -18,6 +18,7 @@ Struttura dati di output:
 # Export delle funzioni principali
 from .config import get_config
 from .loaders import load_pose_data, load_text_data, get_interval_metadata
+from .skeleton import Skeleton2D
 from .data_builder import (
     build_sample_data,
     get_speaker_intervals,
@@ -37,5 +38,7 @@ __all__ = [
     'build_sample_data',
     'get_speaker_intervals',
     'load_multiple_samples',
-    'get_all_missing_intervals'
+    'get_all_missing_intervals',
+    # Skeleton
+    'Skeleton2D'
 ]
