@@ -20,3 +20,4 @@ src/pats/utils/__main__.py
 src/pats/utils/config.py
 src/pats/utils/data_builder.py
 src/pats/utils/loaders.py
+src/pats/utils/skeleton.py
